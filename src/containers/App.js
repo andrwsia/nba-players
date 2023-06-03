@@ -2,7 +2,8 @@ import React, { Component, Fragment } from "react";
 import { nbaPlayers } from "../nbaPlayers";
 import NavBar from "../components/nav-bar/NavBar";
 import CardList from "../components/card-list/CardList";
-import Scroll from "../components/scroll/Scroll"
+import ErrorBoundry from "../components/error-boundry/Error-Boundry";
+import Scroll from "../components/scroll/Scroll";
 
 class App extends Component {
     constructor() {
@@ -14,8 +15,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        // this.setState({});
-        this.setState({ nbaPlayers: nbaPlayers })
+        this.setState({ nbaPlayers: nbaPlayers });
     }
 
     onSearchChange = (event) => {
@@ -25,11 +25,10 @@ class App extends Component {
     render() {
         const { nbaPlayers, searchfield } = this.state;
 
-        const filteredNBAPlayers = nbaPlayers.filter(nbaPlayer => {
-            return nbaPlayer.name
-                .toLowerCase()
-                .includes(searchfield.toLowerCase());
+        const filteredNBAPlayers = nbaPlayers.filter((nbaPlayer) => {
+            return nbaPlayer.name.toLowerCase().includes(searchfield.toLowerCase());
         });
+
         if (!nbaPlayers.length) {
             return (
                 <>
@@ -40,10 +39,12 @@ class App extends Component {
         } else {
             return (
                 <>
-                    <NavBar searchChange={this.onSearchChange} />
-                    <Scroll>
-                        <CardList nbaPlayers={filteredNBAPlayers} />
-                    </Scroll>
+                    <ErrorBoundry>
+                        <NavBar searchChange={this.onSearchChange} />
+                        <Scroll>
+                            <CardList nbaPlayers={filteredNBAPlayers} />
+                        </Scroll>
+                    </ErrorBoundry>
                 </>
             );
         }
